@@ -12,8 +12,8 @@ void ofApp::setup(){
 	cube.setup();
 	for (int i = 0; i < N; i++) {
 		int o1 =  75 + (rand() % static_cast<int>(125 - 75 + 1));
-		int o2 = 450;
-		int o3 = 0+(rand() % static_cast<int>(30 - 0 + 1));  // wspolrzedna spadku gdy bedzie 155 to grawitacja ON !
+		int o2 = 453;
+		int o3 = 0+(rand() % static_cast<int>(80 - 0 + 1));  // wspolrzedna spadku gdy bedzie 155 to grawitacja ON !
 		Particle * p = new Particle();
 		krople.push_back(*p);
 		krople[i].setup(o1, o2, o3);
@@ -21,7 +21,7 @@ void ofApp::setup(){
 	}
 	
 	light.enable();
-	
+		
 	
 }
 
@@ -30,7 +30,7 @@ void ofApp::update(){
 	for (int i = 0; i < N; i++) {
 		
 		
-		if (krople[i].getZ() > 155) {
+		if (krople[i].getZ() > 150) {
 			krople[i].gravity();
 		}
 		else {

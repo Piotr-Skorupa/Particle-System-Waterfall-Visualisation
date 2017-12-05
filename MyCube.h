@@ -1,11 +1,12 @@
 #pragma once
 #include "ofMain.h"
+#include "of3dPrimitives.h"
 
 class MyCube 
 {
-	
+	ofTexture texture;
 	ofColor color;
-	ofRectangle rect;
+	
 public:
 	
 	void setup();

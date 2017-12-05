@@ -3,6 +3,7 @@
 #include "ofMain.h"
 #include "MyCube.h"
 #include "of3dGraphics.h"
+#include "of3dPrimitives.h"
 #include "Particle.h"
 #include <iostream>
 #include <vector>
@@ -30,10 +31,8 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
 
-		ofVboMesh mesh;
-		const int side = 200.0f;
 		MyCube cube;
-		const int N = 1000; // poczatkowa ilosc particli
+		const int N = 3500; // poczatkowa ilosc particli
 		std::vector<Particle> krople;
 		Particle prubny_obiekt;
 		ofLight light; // creates a light and enables lighting

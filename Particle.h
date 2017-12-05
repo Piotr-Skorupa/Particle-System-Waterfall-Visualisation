@@ -7,12 +7,14 @@ class Particle
 	ofTexture texture;
 	ofColor color;
 	float x, y, z, v;
+	float x0, y0, z0, v0;
 	float radius; 
 	float mass;
 	float dt;
 	float g;
 	bool isAlive;
 	bool startGravity;
+	float barier;
 	
 	void setV0();
 public:

@@ -15,16 +15,27 @@ Particle::Particle()
 
 void Particle::setup(int x1, int y1, int z1)
 {
+	//wartosci modyikowane na biezaco
 	x = x1;
 	y = y1;
 	z = z1;
-	radius = 3.0;
+	//stale wartosci poczatkowe
+	x0 = x1;
+	y0 = y1;
+	z0 = z1;
+
+	//reszta danych
+	radius = 2.0;
 	v = 20.0;
+	v0 = v;
 	mass = 0.3;
 	dt = 0.1;
 	g = -9.81;
 	isAlive = true;
 	startGravity = false;
+	
+	// bariera zywotnosci
+	barier = 0 + (rand() % static_cast<int>(140 - 0 + 1));
 
 	//kolory wody 
 	ofColor c1 = ofColor(0, 0, 205);
@@ -64,8 +75,12 @@ void Particle::gravity() {
 	if (isAlive == true) {
 		// sila grawitacji 
 		setV0();
+		z = z + v0 * dt;
 		y = y + v * dt;
 		v = v + g * dt;
+		if (y < barier) {
+			setup(x0,y0,z0);
+		}
 	}
 }
 
