@@ -26,9 +26,9 @@ void Particle::setup(int x1, int y1, int z1)
 
 	//reszta danych
 	radius = 2.0;
-	v = 20.0;
+	v = 18 + (rand() % static_cast<int>(24 - 18 + 1));
 	v0 = v;
-	mass = 0.3;
+	mass = 5;
 	dt = 0.1;
 	g = -9.81;
 	isAlive = true;
@@ -75,7 +75,7 @@ void Particle::gravity() {
 	if (isAlive == true) {
 		// sila grawitacji 
 		setV0();
-		z = z + v0 * dt;
+		opor();
 		y = y + v * dt;
 		v = v + g * dt;
 		if (y < barier) {
@@ -93,6 +93,10 @@ void Particle::ruch_prostoliniowy() {
 
 void Particle::opor() {
 	//funkcja oporu (lepkosci)
+	z = z + v0 * dt;
+	//float D = (-6)*3.14*v0*0.003*radius;
+	//float a = D / mass;
+	//v0 = a*dt;
 }
 
 float Particle::getX()

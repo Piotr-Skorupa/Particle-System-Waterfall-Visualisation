@@ -6,25 +6,28 @@
 void ofApp::setup(){
 	ofEnableSmoothing();
 	ofEnableDepthTest();
+	cam.setDistance(1000);
 	ofBackground(0, 0, 0);
 	ofSetFrameRate(30);
 	//prubny_obiekt.setup(100, 450, 155); // probny obiekt rysowany w mijescu spadku wodospadu 
-	cube.setup();
+	
+	cube.setup(100.0, 200.0, 0.0, 300.0, 500.0, 300.0);
 	for (int i = 0; i < N; i++) {
 		int o1 =  75 + (rand() % static_cast<int>(125 - 75 + 1));
 		int o2 = 453;
-		int o3 = 0+(rand() % static_cast<int>(80 - 0 + 1));  // wspolrzedna spadku gdy bedzie 155 to grawitacja ON !
-		Particle * p = new Particle();
-		krople.push_back(*p);
+		int o3 = 0+(rand() % static_cast<int>(80 - 0 + 1));  
+		
+		krople.push_back(Particle());
 		krople[i].setup(o1, o2, o3);
-		delete p;
+		
 	}
 	
 	light.enable();
+	msg = "Author: Piotr Skorupa \nTo fullscreen press 'F' \nTo restart press 'R' \nTo exit press 'Esc'";
+	msg += "\n\nfps: " + ofToString(ofGetFrameRate(), 2);
 		
 	
 }
-
 //--------------------------------------------------------------
 void ofApp::update(){
 	for (int i = 0; i < N; i++) {
@@ -51,8 +54,11 @@ void ofApp::draw(){
 		krople[i].draw();
 	}
 	
-	ofPopMatrix();
+	ofPopMatrix();	
 	cam.end();
+	//drawTextBox();
+	ofSetColor(255);
+	ofDrawBitmapStringHighlight(msg, 10, 20);
 }
 
 //--------------------------------------------------------------
