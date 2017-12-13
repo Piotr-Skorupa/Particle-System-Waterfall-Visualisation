@@ -1,8 +1,11 @@
 #pragma once
 #include "ofMain.h"
+#include <ctime>
+#include <cmath>
 
 class Particle 	
 {
+protected:
 	//ofSpherePrimitive sphere;
 	ofTexture texture;
 	ofColor color;
@@ -14,22 +17,33 @@ class Particle
 	float g;
 	bool isAlive;
 	bool startGravity;
-	float barier;
+	float barierY;
+	float barierZ;
+	double lifeTime;
+	clock_t lifeTimer;
 	
 	void setV0();
+	
+
 public:
 	
 	Particle();
-	~Particle();
-	void setup(int x1, int y1, int z1);
+	Particle(int x1, int y1, int z1);
+	virtual ~Particle();
+	virtual void setup(int x1, int y1, int z1);
 	void draw();
-	void gravity();
-	void ruch_prostoliniowy();
-	void opor();
+	
 	float getX();
 	float getY();
 	float getZ();
-	
+	double getLifeTime();
+	void check_lifeTime();
+	double fRand(double fMin, double fMax);
+	void odbicie();
+	void gravity();
+	void ruch_prostoliniowy();
+	void opor();
+	void check_collision_with_ball(Particle object);
 
 
 

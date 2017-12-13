@@ -5,10 +5,12 @@
 #include "of3dGraphics.h"
 #include "of3dPrimitives.h"
 #include "Particle.h"
+#include "CollidingBall.h"
 #include <iostream>
 #include <vector>
 #include <random>
 #include <string>
+#include <ctime>
 
 class ofApp : public ofBaseApp{
 
@@ -31,9 +33,16 @@ class ofApp : public ofBaseApp{
 		void windowResized(int w, int h);
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
-	
+		
+
+		CollidingBall ball;
+		double birth_time;
+		clock_t birthTimer;
+		ofVec3f lightVec;
 		MyCube cube;
-		const int N = 3500; // poczatkowa ilosc particli
+		MyCube smallCube;
+		const int N = 10; // poczatkowa ilosc particli
+		const int VECTOR_MAX_SIZE = 20000;
 		std::vector<Particle> krople;
 		Particle prubny_obiekt;
 		ofLight light; // creates a light and enables lighting
