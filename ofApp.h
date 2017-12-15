@@ -41,8 +41,9 @@ class ofApp : public ofBaseApp{
 		ofVec3f lightVec;
 		MyCube cube;
 		MyCube smallCube;
+		ofSoundPlayer sound;
 		const int N = 10; // poczatkowa ilosc particli
-		const int VECTOR_MAX_SIZE = 20000;
+		const int VECTOR_MAX_SIZE = 15000;
 		std::vector<Particle> krople;
 		Particle prubny_obiekt;
 		ofLight light; // creates a light and enables lighting

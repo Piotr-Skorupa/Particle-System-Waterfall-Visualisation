@@ -2,7 +2,7 @@
 
 void MyCube::setup(float x1, float y1, float z1, float sx1, float sy1, float sz1)
 {
-	color = ofColor(199, 199, 199);
+	color = ofColor(115, 59, 36);
 	ofLoadImage(texture, "resources/rock.jpg");
 	x = x1;
 	y = y1;

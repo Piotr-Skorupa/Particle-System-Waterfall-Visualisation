@@ -12,7 +12,6 @@ void ofApp::setup(){
 	birth_time = 0.5;
 	birthTimer = std::clock();
 
-
 	cube.setup(100.0, 200.0, 0.0, 300.0, 500.0, 300.0);
 	smallCube.setup(100., 150.0, 170.0,300.0, 400.0, 300.0);
 	ball.setup(100.0, 100.0, 470.0);
@@ -26,7 +25,7 @@ void ofApp::setup(){
 		krople[i].setup(o1, o2, o3);
 		
 	}
-	lightVec.set(0, 1000, 1330);
+	lightVec.set(-1000, 0, 0);
 	light.setDirectional();
 	ofEnableLighting();
 	light.setOrientation(lightVec);
@@ -34,7 +33,10 @@ void ofApp::setup(){
 	msg = "Author: Piotr Skorupa \nTo fullscreen press 'F' \nTo restart press 'R' \nTo exit press 'Esc'";
 	msg += "\n\nfps: " + ofToString(ofGetFrameRate(), 2);
 
-
+	sound.load("waterfall.wav");
+	sound.setVolume(0.6);
+	sound.play();
+	sound.setLoop(true);
 	
 		
 	
@@ -43,29 +45,29 @@ void ofApp::setup(){
 void ofApp::update(){
 		
 	if (krople.size() >= VECTOR_MAX_SIZE) {
-		
+
 		krople.erase(krople.begin(), krople.begin()+3000);
 		
 	}
 	else {
 		for (int i = 0; i < 30; i++) {
+
 			int o1 = 75 + (rand() % static_cast<int>(125 - 75 + 1));
 			int o2 = 453;
 			int o3 = 0 + (rand() % static_cast<int>(80 - 0 + 1));
 			krople.push_back(Particle(o1, o2, o3));
 		}
 	}
-	for (int i = 0; i < krople.size() - 1; i++) {
-		
-		krople[i].check_lifeTime();
-		if (krople[i].getZ() > 150) {
-			krople[i].gravity();
-			krople[i].check_collision_with_ball(ball);
+	for (auto &kropla : krople) {	
+
+		kropla.check_lifeTime();
+		if (kropla.getZ() > 150) {
+			kropla.gravity();
+			kropla.check_collision_with_ball(ball);
 		}
 		else {
-			krople[i].ruch_prostoliniowy();
+			kropla.ruch_prostoliniowy();
 		}
-		
 	}
 	
 }

@@ -28,14 +28,16 @@ void Particle::setup(int x1, int y1, int z1)
 	y0 = y1;
 	z0 = z1;
 	//czas zycia w sekundach
-	lifeTime = fRand(7.3,8.0);
+	lifeTime = fRand(6.3,7.0);
 	lifeTimer = std::clock();  //start timera
 
 	//reszta danych
 	radius = 2.0;
-	v = ofRandom(19, 24);
-	v0 = v;
-	mass = 5;
+	vz = ofRandom(19, 25);
+	v0 = vz;
+	vx = 0;
+	vy = 0;
+	mass = 5.0;
 	dt = 0.1;
 	g = -9.81;
 	isAlive = true;
@@ -43,7 +45,7 @@ void Particle::setup(int x1, int y1, int z1)
 	
 	// bariery kolizyjne
 	barierY = 356.0;
-	barierZ = 300.0;
+	barierZ = 340.0;
 
 	//kolory wody 
 	ofColor c1 = ofColor(0, 0, 205);
@@ -72,25 +74,29 @@ void Particle::draw()
 {	
 	
 	if (isAlive == true) {
+		
 		ofSetColor(color);
 		ofFill();
 		ofDrawSphere(x, y, z, radius);
+		
 	}
 }
 
 void Particle::gravity() {
 	
 	if (isAlive == true) {
-		// sila grawitacji 
-		setV0();
-		opor();
+		
+		ruch();
 		
 		if (y < barierY && z < barierZ) {
-			odbicie();
+			vy = -vy;
+			vy = vy + g * dt * std::pow(mass,2);
+			y = y + vy * dt;
+			//z = v0;
 		}
 		else {
-			y = y + v * dt;
-			v = v + g * dt;
+			y = y + vy * dt;
+			vy = vy + g * dt;
 		}
 	}
 }
@@ -98,16 +104,16 @@ void Particle::gravity() {
 void Particle::ruch_prostoliniowy() {
 	//funkcja ruchu 
 	if (isAlive == true) {
-		z = z + v* dt;
+		z = z + vz* dt;
+		
 	}
 }
 
-void Particle::opor() {
-	//funkcja oporu (lepkosci)
+void Particle::ruch() {
+	//druga wersja ruchu prostoliniowego
 	z = z + v0 * dt;
-	//float D = (-6)*3.14*v0*0.003*radius;
-	//float a = D / mass;
-	//v0 = a*dt;
+	x = x + vx *dt;
+	
 }
 
 void Particle::check_collision_with_ball(Particle object)
@@ -116,13 +122,63 @@ void Particle::check_collision_with_ball(Particle object)
 	float diff_y = y - object.getY();
 	float diff_z = z - object.getZ();
 
-	float difference_sum = diff_x*diff_x + diff_y*diff_y + diff_z*diff_z;
+	float difference_sum = std::sqrt(std::pow(diff_x,2) + std::pow(diff_y,2) + std::pow(diff_z,2));
 
-	if (difference_sum <= object.radius*object.radius) {
-		v = -v;
+	if (difference_sum <= (radius + object.get_radius())) {
+
+		// check collision point
+		float collisionPointX =((x * object.get_radius()) + (object.getX() * radius))
+			/ (radius + object.get_radius());
+
+		float collisionPointY =((y * object.get_radius()) + (object.getY() * radius))
+			/ (radius + object.get_radius());
+		float collisionPointZ =((z * object.get_radius()) + (object.getZ() * radius))
+			/ (radius + object.get_radius());
+		
+		//wektor normalny od srodka kuli start obliczen
+		float normal_vectorX = object.getX() - collisionPointX;
+		float normal_vectorY = object.getY() - collisionPointY;
+		float normal_vectorZ = object.getZ() - collisionPointZ;
+
+		// odleglosc miedzy punktem kolizji a srodkiem kuli
+		float dis_tance = std::sqrt(std::pow(object.getX() - collisionPointX, 2)+
+			std::pow(object.getY() - collisionPointY, 2) +
+			std::pow(object.getZ() - collisionPointZ, 2));
+		// wynikowy wektor normalny
+		normal_vectorX = normal_vectorX / dis_tance;
+		normal_vectorY = normal_vectorY / dis_tance;
+		normal_vectorZ = normal_vectorZ / dis_tance;
+
+		// skladowa V prostopadla
+		float v_prostopadle = vx * normal_vectorX + vy * normal_vectorY + v0 * normal_vectorZ;
+		float normal_v_prostopadle = normal_vectorX * v_prostopadle + normal_vectorY * v_prostopadle + normal_vectorZ* v_prostopadle;
+		float v_rownolegle = std::abs(vx - normal_v_prostopadle + vy - normal_v_prostopadle + v0 - normal_v_prostopadle);
+		// wektory v 
+		float vprostX = normal_vectorX * v_prostopadle;
+		float vprostY = normal_vectorY * v_prostopadle;
+		float vprostZ = normal_vectorZ * v_prostopadle;
+
+		float vrownolX = vx - vprostX;
+		float vrownolY = vy - vprostY;
+		float vrownolZ = v0 - vprostZ;
+
+		// FINALNY WEKTOR ODBICIA
+		float vODB_x = vrownolX - 2 * vprostX;
+		float vODB_y = vrownolY - 2 * vprostY;
+		float vODB_z = vrownolZ - 2 * vprostZ;
+
+		
+		//ODBICIE
+		vx += vODB_x;
+		vy += vODB_y;
+		v0 += vODB_z;
+
+		x += vx * dt;
+		//y += vy *dt;
+		z += v0 *dt;
+
+		
 	}
-
-
 }
 
 
@@ -134,11 +190,6 @@ void Particle::check_lifeTime() {
 	}
 }
 
-void Particle::odbicie() {
-	v = -v;
-	v = v + g * dt * mass *4;
-	y = y + v * dt;
-}
 
 //generate random double
 double Particle::fRand(double fMin, double fMax)
@@ -162,11 +213,12 @@ float Particle::getZ()
 	return z;
 }
 
-void Particle::setV0() {
-	if (startGravity == false) {
-		v = 0;
-		startGravity = true;
-	}
+float Particle::get_radius() {
+	return radius;
+}
+
+float Particle::getMass() {
+	return mass;
 }
 
 double Particle::getLifeTime() {

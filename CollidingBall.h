@@ -8,5 +8,6 @@ class CollidingBall :
 public:
 	CollidingBall();
 	void setup(float x1, float y1, float z1);
+	
 };
 
